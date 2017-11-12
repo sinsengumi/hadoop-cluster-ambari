@@ -1,0 +1,46 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Install libselinux-python
+      yum:
+        name: libselinux-python
+        state: present
+    - name: Disable SELinux
+      selinux:
+        state: disabled
+    - name: Disable firewalld
+      firewalld:
+        permanent: true
+        state: disabled
+    - name: Generate /etc/hosts file
+      template:
+        src: files/hosts.j2
+        dest: /etc/hosts
+    - name: Export LC_ALL
+      shell: export LC_ALL=C
+    - name: Register yum-ambari-repo
+      yum_repository:
+        name: ambari
+        description: ambari repo
+        baseurl: http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.4.1.0
+        gpgcheck: yes
+        gpgkey: http://public-repo-1.hortonworks.com/ambari/centos7/RPM-GPG-KEY/RPM-GPG-KEY-Jenkins
+        state: present
+
+- hosts: ambari
+  become: yes
+  tasks:
+    - name: Register yum-ambari-repo
+      yum_repository:
+      name: ambari
+      description: ambari repo
+      baseurl: http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.4.1.0
+      gpgcheck: yes
+      gpgkey: http://public-repo-1.hortonworks.com/ambari/centos7/RPM-GPG-KEY/RPM-GPG-KEY-Jenkins
+      state: present
+
+  - name: Install ambari
+    yum:
+      name: ambari-server
+      state: present
+

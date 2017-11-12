@@ -1,0 +1,17 @@
+[all:vars]
+ansible_ssh_host=127.0.0.1
+ansible_ssh_user=vagrant
+ansible_ssh_private_key_file=/Users/sinsengumi/.vagrant.d/insecure_private_key
+
+[ambari_group]
+ambari ansible_ssh_port=2222
+
+[zookeeper]
+zookeeper1 ansible_ssh_port=2200
+zookeeper2 ansible_ssh_port=2201
+zookeeper3 ansible_ssh_port=2202
+
+[datanode]
+datanode1 ansible_ssh_port=2203
+datanode2 ansible_ssh_port=2204
+datanode3 ansible_ssh_port=2205
